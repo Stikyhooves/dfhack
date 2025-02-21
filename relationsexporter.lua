@@ -8,7 +8,7 @@ local utils = require 'utils'
 ---- This script runs a loop through all active dwarves to get immediate relations that are defined as hfigs. 
 ----- It generates three primary exports:
 ----- 		1: A csv of the relationships. This includes diety and deceased pet relations. 
------ 		2: A csv of your dwarves and thier goals. This is just something I wanted handy but it not related to relatiohsips.
+----- 		2: A csv of your dwarves and their goals. This is just something I wanted handy but it not related to relationships.
 ----- 		3: The relationships for lovers, spouses, and children as a graphviz digraph code. This outputs directly to the df hack output window so that it can be ----- 		   copy/pasted directly into a visualizer. This can be used with any graphviz generator such as https://dreampuf.github.io/GraphvizOnline/
 ----------------------------------------------------------
 
@@ -90,7 +90,7 @@ local function relations()
 	
 	------- Create Tables and Headers ------ 
 	local CitizenTable = {}
-    local CitizenTable_header = "Unit_id,HxId,Name,Caste,Race,Gender,Born,Died,Age,Goal \n"
+    local CitizenTable_header = "Unit_id,HxId,Name,Caste,Race,Gender,Born,Died,Age,Goal,Relatives_living,Spouses,Lovers,Children \n"
 	
 	local Relations ={}
 	local relationheader ="Dorf_uid,Dorf_hfid,Dorf_Race, Dorf_Name, Dorf_Gender, Dorf_BirthYear, Dorf_DeathYear, Dorf_Age, Dorf_Goal ,Relation_Code, Relation_Type, Relation_hfid, Relation_Name, Relation_Gender, Relation_Living \n"
@@ -121,8 +121,9 @@ local function relations()
 		local caste = get_caste_name(dorfcitz.race, dorfcitz.caste, dorfcitz.profession)
 		local dorf_race = dfhack.units.getRaceName(dorf_hex) --mostly duh...  
 		local dorf_goal = dfhack.units.getGoalName(dorf_hex,0)
+
 		
-		CitizenTable[dorf_hex] = string.format('%s,%s,%s,%s,%s,%s,%s,%s,%s,%s \n', dorf_uid,dorf_hxfig_id,dorf_name,caste,dorf_race,dorf_gender,get_birthyear(dorf_hxfig_id),get_deathyear(dorf_hxfig_id),dorf_age,dorf_goal)
+--		CitizenTable[dorf_hex] = string.format('%s,%s,%s,%s,%s,%s,%s,%s,%s,%s \n', dorf_uid,dorf_hxfig_id,dorf_name,caste,dorf_race,dorf_gender,get_birthyear(dorf_hxfig_id),get_deathyear(dorf_hxfig_id),dorf_age,dorf_goal)
 		
 		---- The code related to branching is from to Ramblurr's original family.lua (see notes above)
 		---- not all of it is nessecary, but it is delicate so I left it intact to keep it from breaking. 
@@ -147,23 +148,45 @@ local function relations()
 			table.remove(queue, 1)
 			visited[node.id] = true
 			relcount = 0
+			relcount_living = 0
+			relcount_children = 0
+			relcount_spouse = 0
+			relcount_lover = 0
 			local hfig_hex = utils.binsearch(df.global.world.history.figures, node.id, 'id')
 			if node.gen < max_generations then -- this is not in use as we only go by 1st connections
 				for _,link in ipairs(hfig_hex.histfig_links) do
 					reldorf = link.target_hf
 					relcode = link:getType()
 					reltype = get_reltype(relcode)
-					
+
 					if reltype == 'Mother' then 
 						relcount = relcount +1
+						if get_deathyear(reldorf) == '' then 
+							relcount_living = relcount_living +1
+						end
 					elseif reltype == 'Father' then 
 						relcount = relcount +1
+						if get_deathyear(reldorf) == '' then 
+							relcount_living = relcount_living +1
+						end
 					elseif reltype == 'Spouse' then 
 						relcount = relcount +1
+						if get_deathyear(reldorf) == '' then 
+							relcount_living = relcount_living +1
+							relcount_spouse = relcount_spouse +1
+						end
 					elseif reltype == 'Child' then 
 						relcount = relcount +1
+						if get_deathyear(reldorf) == '' then 
+							relcount_living = relcount_living +1
+							relcount_children = relcount_children +1
+						end
 					elseif reltype == 'Lover' then 
 						relcount = relcount +1
+						if get_deathyear(reldorf) == '' then 
+							relcount_living = relcount_living +1
+							relcount_lover = relcount_lover +1
+						end
 					end
 					
 				end
@@ -171,6 +194,9 @@ local function relations()
 			
 		end
 		-----------------------------------------------------------------
+	
+	
+		CitizenTable[dorf_hex] = string.format('%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s \n', dorf_uid,dorf_hxfig_id,dorf_name,caste,dorf_race,dorf_gender,get_birthyear(dorf_hxfig_id),get_deathyear(dorf_hxfig_id),dorf_age,dorf_goal,relcount_living,relcount_spouse,relcount_lover,relcount_children)
 		
 		---------------------------------		
 		---- Print Nodes For Graphviz ----
@@ -201,7 +227,7 @@ local function relations()
 						elseif get_deathyear(reldorf) ~= '' then relstatus = 'Deceased'
 						else relstatus = 'Alive'
 					end
-					
+
 					---------------------------------					
 					---- Create Row for CSV Export --
 					Relations[i] = string.format(
@@ -220,8 +246,12 @@ local function relations()
 					elseif reltype == 'Spouse' then 
 						print('"', dorf_name, '"',"->",'"', reldorfname, '"', " [style=solid color=darkslategray4  arrowhead=inv penwidth = 2]")
 					elseif reltype == 'Child' then 
-						-- print('"', dorf_name, '"',"->",'"', reldorfname, '"', " [style=dashed color=grey  arrowhead = none]")
+						--print('"', dorf_name, '"',"->",'"', reldorfname, '"', " [style=dashed dir=both color=grey arrowhead=none arrowtail=normal]")
 						-- omitting child links as they are duplicative of parent links.
+						-- NOTE THIS MAY NEED TO BE ADDED SO WE CAN SEE IF CHILDREN HAVE DIDED. 
+						--if relstatus ~= 'Alive' then 
+						--	print('"', dorf_name, '"',"->",'"', reldorfname, '"', " [style=dashed color=grey arrowhead=normal]")
+						--end
 					elseif reltype == 'Lover' then 
 						print('"', dorf_name, '"',"->",'"', reldorfname, '"', " [style=solid color=magenta penwidth = 2 arrowType=inv]")
 					end
@@ -296,4 +326,3 @@ local function printcitizen_csv()
 end
 
 relations()
---printcitizen_csv()
