@@ -7,7 +7,7 @@ This script differs greatly in that it runs a loop through all active dwarves to
 
 ### It generates three primary exports:  
 
-1: A csv of the your citizens and thier relationships. This includes spouse, father, mother, lover, child, diety, and deceased pet relations. The limitation to relationships is based on what relationships are stored in the histfig data. This may be why (in my observation) only deceased pets are listed. There is also an indication of if the related entity is living or dead.   
+1: A csv of the your citizens and thier relationships. This includes spouse, father, mother, lover, child, diety, and deceased pet relations. The limitation to relationships is based on what relationships are stored in the histfig data. This may be why (in my observation) only deceased pets are listed. There is also an indication of if the related entity is living or dead. You can use this information to create your own digraphs if you feel handy. Otherwise you can use the digraph code output to get a graph.    
 
 The data is presented as:  
 - **Fields Related to the main unit:** Dorf_uid,Dorf_hfid,Dorf_Race, Dorf_Name, Dorf_Gender, Dorf_BirthYear, Dorf_DeathYear, Dorf_Age, Dorf_Goal 
@@ -25,6 +25,7 @@ To use this code output:
   2. Run the script (relationsexporter).   
   3. Copy the code from the output window using the dfhack 'copy output to clipboard function'.   
   4. Paste that code into the graphviz digraph generator of your choice. (i.e. https://dreampuf.github.io/GraphvizOnline/   )
-  5. Behold the relations.   
+  5. Edit the code to remove anything that is not part of the digraph. (this shoule be obvious as I added text lines to indicate the break.) 
+  6. ***Behold the relations.*** I designed this to work with dot and neato arrangements. I like both for different reasons. 
 
 
