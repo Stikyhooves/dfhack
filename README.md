@@ -19,7 +19,7 @@ The data is presented as:
 3: The relationships for lovers, spouses, and children as a graphviz digraph code. This outputs directly to the df hack output window so that it can be copy/pasted directly  into a visualizer. This can be used with any graphviz generator such as https://dreampuf.github.io/GraphvizOnline/   
 
 To use this code output:    
-- 1. Clear the dfhack output window.     
+  1. Clear the dfhack output window.     
   2. Run the script.   
   3. Copy the code from the output window using the dfhack 'copy output to clipboard function'.   
   4. Paste that code into the graphviz digraph generator of your choice. (i.e. https://dreampuf.github.io/GraphvizOnline/   )
