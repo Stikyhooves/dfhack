@@ -14,7 +14,7 @@ The data is presented as:
 - **Fields Related to the related unit:** Relation_Code, Relation_Type, Relation_hfid, Relation_Name, Relation_Gender, Relation_Living
   
 2: A csv of your dwarves and their goals. This is just something I wanted handy but it not related to relationships. In some ways it is just a simplified copy of the first export.   
-- **Fields:** Unit_id,HxId,Name,Caste,Race,Gender,Born,Died,Age,Goal
+- **Fields:** Unit_id,HxId,Name,Caste,Race,Gender,Born,Died,Age,Goal, Relatives_living,Spouses,Lovers,Children
          
 3: The relationships for lovers, spouses, and children as a graphviz digraph code. This outputs directly to the dfhack output window so that it can be copy/pasted directly  into a visualizer. This can be used with any graphviz generator such as https://dreampuf.github.io/GraphvizOnline/   
 This visualization is limited to lovers (indicated by think magenta lines), spouses (indicated by thick teal lines), and parents/children (indicated by dashed lines). I think it may inadventently omit deceased children at this time, but I know how this can be fixed, so I may update that soon.       
@@ -32,5 +32,8 @@ To use this code output:
 ### Plans:   
 Goals for the next week or so:   
 - I need to account for dead children. They are not currently listed in the graphviz.
-- I need to differentiate between dead and 'off site' dwarves in the graphviz. Currently I account for child/parent relations based on living/present children. This was done to prevent duplcication of edges, but I know more now and can account for the differences.   
+- I need to differentiate between dead and 'off site' dwarves in the graphviz. Currently I account for child/parent relations based on living/present children. This was done to prevent duplcication of edges, but I know more now and can account for the differences.
+
+#### Updates:   
+- 2/21/25 - Added counts of any living relatives, spouses, lovers, and children to the citizen table expport. 
   
