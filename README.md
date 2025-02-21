@@ -2,12 +2,12 @@
 ## Script: relationsexporter.lua
 The code in this script was heavily borrowed from Ramblur's now defunct family.lua script.  
 (https://github.com/Ramblurr/dfhack/blob/f585ecf4831fc19badc97b37e27cd4ccc7874c44/scripts/family.lua (2/18/2025))  
-The original script did single dwarf selection, exporting information for the selected dwarf's family only. It had the ability to pull distant relations such as grandparents for a single entity. 
-This script differs greatly in that it runs a loop through all active dwarves to get immediate relations that are defined as hfigs. You can get generational relationships, but only for units in your fortress or the immediate external ones. For example, a unit whose parent's have died will still show those parent, but if the parents and grandparents have died, you will only see the parents.    
+The original script did single dwarf selection, exporting information for the selected dwarf's family only. It had the ability to pull distant relations such as grandparents for a single entity. I have updated his script to make it operational and you may see it posted here. 
+My script differs greatly in that it runs a loop through all active dwarves to get immediate relations that are defined as hfigs. You can get generational relationships, but only for units in your fortress or the immediate external ones. For example, a unit whose parent's have died will still show those parent, but if the parents and grandparents have died, you will only see the parents. Essentially, this script lets you see the whole fort.     
 
 ### It generates three primary exports:  
 
-1: A csv of the your citizens and thier relationships. This includes spouse, father, mother, lover, child, deity, and deceased pet relations. The limitation to relationships is based on what relationships are stored in the histfig data. This may be why (in my observation) only deceased pets are listed. There is also an indication of if the related entity is living or dead. You can use this information to create your own digraphs if you feel handy. Otherwise you can use the digraph code output to get a graph.    
+1: A csv of the your citizens and thier relationships. This includes spouse, father, mother, lover, child, deity, and deceased pet relations. The limitation to relationships is based on what relationships are stored in the histfig data. This may be why (in my observation) only deceased pets are listed. There is also an indication of if the related entity is living or dead. You can use this information to create your own digraphs if you feel handy. Otherwise you can use the digraph code output to get a graph. The benefit of this file as it will show you the deities of your dwarves.     
 
 The data is presented as:  
 - **Fields Related to the main unit:** Dorf_uid,Dorf_hfid,Dorf_Race, Dorf_Name, Dorf_Gender, Dorf_BirthYear, Dorf_DeathYear, Dorf_Age, Dorf_Goal 
