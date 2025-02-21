@@ -1,5 +1,5 @@
 # Dfhack scripts:
-# Notes on: relationsexporter.lua
+## Script: relationsexporter.lua
 The code in this script was heavily borrowed from Ramblur's now defunct family.lua script.  
 (https://github.com/Ramblurr/dfhack/blob/f585ecf4831fc19badc97b37e27cd4ccc7874c44/scripts/family.lua (2/18/2025))  
 The original script did single dwarf selection, exporting information for the selected dwarf's family only.   
