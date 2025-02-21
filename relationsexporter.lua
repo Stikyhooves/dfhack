@@ -88,7 +88,7 @@ function generategraphnode_hfig(hfig_id)
 
 	hfig_name = dfhack.translation.translateName(get_hfighex(hfig_id).name)
 	hfig_gender = gender_read(get_hfighex(hfig_id).sex)
-	
+	hfig_caste = ""
 	-------------------------
 	--checks if fig is in the fort
 	hfigfortcount = 0
@@ -96,6 +96,7 @@ function generategraphnode_hfig(hfig_id)
 		
 		if dorfcitz.hist_figure_id == hfig_id then
 			hfigfortcount = hfigfortcount +1
+			hfig_caste = get_caste_name(dorfcitz.race, dorfcitz.caste, dorfcitz.profession)
 		end
 	end
 	
@@ -119,7 +120,7 @@ function generategraphnode_hfig(hfig_id)
 		end
 	end
 	
-	print("\""..hfig_id.."\"", " [label= \""..hfig_name.. "\\n" ..hfig_status .. "\"".. "style=filled color=", hfig_nodecolor, " shape=Mrecord]") 
+	print("\""..hfig_id.."\"", " [label= \""..hfig_name.. "\\n" ..hfig_status .. hfig_caste .. "\"".. "style=filled color=", hfig_nodecolor, " shape=Mrecord]") 
 	--print(hfig_name..  "-" .. hfig_gender..  "-" .. hfig_status)
 
 
@@ -353,7 +354,7 @@ local function relations()
 						--if relstatus ~= 'Alive' then 
 						generategraphnode_hfig(dorf_hxfig_id)
 						generategraphnode_hfig(reldorf)
-						print("\""..RelationStart.."\"->\"".. RelationEnd .."\"[style=dashed color=grey arrowhead=normal]")
+						print("\""..RelationStart.."\"->\"".. RelationEnd .."\"[style=dashed color=" .. relgendercolor.. "  dir=both arrowhead=none arrowtail=normal]")
 						--end
 					elseif reltype == 'Lover' then 
 						--NodeCoupler = math.max(dorf_hxfig_id,reldorf) .. "-".. math.min(dorf_hxfig_id,reldorf)
