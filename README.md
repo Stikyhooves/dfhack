@@ -33,3 +33,12 @@ To use this code output:
    - Added deceased and off site color indicators for graphviz. Cleanup of code and child edges still needed. Child edges are grey and need to match father/mother edges for clarity.
    - Corrected edges between child/parent relations so that they match father/mother relations. (mainly impacts deceased/off site units)
   
+### Comments on Graphviz and dot vs neato Engines
+Graphviz dot and neato are both engines for producting the graph. I prefer dot because it is cleaner to read, but neato can be fun.    
+   
+Things to keep in mind. 
+- Some functions work in dot and not in neato. For this reason the neato output may seem off in some circumstances. I built the script around dot. The only 'neato' centric code is 'overlap=none'. You can play around with the graphviz 'header' to see how the behaviors work. 
+- You can also do a lot with the data files to get your own custom digraphs. You can also do this by editing the print() calls in the lua that create the digraph code. This takes learning/understanding graphviz, but it is very inutive once you get a hang of it.
+- For more info on Graphviz: https://graphviz.org/
+
+  
