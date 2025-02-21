@@ -110,7 +110,6 @@ function generategraphnode_hfig(hfig_id)
 	if get_deathyear(hfig_id) ~= '' then 
 		hfig_status = '(Deceased)'
 		hfig_nodecolor = 'grey52'
-		--print(hfig_name..  "-" .. hfig_gender..  "-" .. hfig_status)
 	else 
 		hfig_status = '' 
 		if hfig_infort == 'Present' then
@@ -121,7 +120,6 @@ function generategraphnode_hfig(hfig_id)
 	end
 	
 	print("\""..hfig_id.."\"", " [label= \""..hfig_name.. "\\n" ..hfig_status .. hfig_caste .. "\"".. "style=filled color=", hfig_nodecolor, " shape=Mrecord]") 
-	--print(hfig_name..  "-" .. hfig_gender..  "-" .. hfig_status)
 
 
 end
@@ -148,7 +146,8 @@ local function relations()
 	print("")
 	print("")
 	print("")
-	print("Digraph Dorf_Relations {concentrate=true overlap=none graph[rankdir=RL] labelloc=",'"t"'," label=",'"',"The Fortress of ", FortName ,'"'," fontsize=",'"',"30pt",'"'," fontname=",'"',"Helvetica,Arial,sans-serif",'"'," node [fontsize=",'"',"12pt",'"'," fontname=",'"',"Helvetica,Arial,sans-serif",'"',"]")
+	print("Digraph Dorf_Relations {")
+	print("concentrate=true overlap=none graph[rankdir=RL] labelloc=",'"t"'," label=",'"',"The Fortress of ", FortName ,'"'," fontsize=",'"',"30pt",'"'," fontname=",'"',"Helvetica,Arial,sans-serif",'"'," node [fontsize=",'"',"12pt",'"'," fontname=",'"',"Helvetica,Arial,sans-serif",'"',"]")
 	
 	---------------------------------------------------------
 
@@ -171,8 +170,6 @@ local function relations()
 		else
 			dorf_gendercolor = get_gendercolor(dorf_gender)
 		end
-		
---		CitizenTable[dorf_hex] = string.format('%s,%s,%s,%s,%s,%s,%s,%s,%s,%s \n', dorf_uid,dorf_hxfig_id,dorf_name,caste,dorf_race,dorf_gender,get_birthyear(dorf_hxfig_id),get_deathyear(dorf_hxfig_id),dorf_age,dorf_goal)
 		
 		---- The code related to branching is from to Ramblurr's original family.lua (see notes above)
 		---- not all of it is nessecary, but it is delicate so I left it intact to keep it from breaking. 
@@ -244,17 +241,10 @@ local function relations()
 		end
 		-----------------------------------------------------------------
 	
-	
+		-- Add row to citizen table
 		CitizenTable[dorf_hex] = string.format('%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s \n', dorf_uid,dorf_hxfig_id,dorf_name,caste,dorf_race,dorf_gender,get_birthyear(dorf_hxfig_id),get_deathyear(dorf_hxfig_id),dorf_age,dorf_goal,relcount_living,relcount_spouse,relcount_lover,relcount_children)
-		
+
 		---------------------------------		
-		---- Print Nodes For Graphviz ----
-		---- Only create node if relations exisit--- 
-	--	if relcount >0 then 
-	--		generategraphnode_hfig(dorf_hxfig_id)
-	--	end
-		---------------------------------
-		
 		----- As noted before: 
 		---- The code related to branching is from to Ramblurr's original family.lua (see notes above)
 		---- not all of it is nessecary, but it is delicate so I left it intact to keep it from breaking. 
@@ -283,9 +273,8 @@ local function relations()
 						relgendercolor = get_gendercolor(reldorfgender) 
 					end
 					
-
 					---------------------------------					
-					---- Create Row for CSV Export --
+					---- Add row to relations table
 					Relations[i] = string.format(
 						'%s,%s,%s,%s,%s,%s ,%s,%s ,%s,%s ,%s,%s ,%s,%s ,%s \n',
 						dorf_uid, dorf_hxfig_id, dfhack.units.getRaceName(dorf_hex),dorf_name, dorf_gender, get_birthyear(dorf_hxfig_id),get_deathyear(dorf_hxfig_id),dorf_age ,dorf_goal,
@@ -296,21 +285,15 @@ local function relations()
 					---- Print Edge For Graphviz ----
 					---- Omitting dieties as they make the graph messy --
 					---- Note: Pet relations seem to only be for deceased pets --- 
-					
-					--generategraphnode_hfig(reldorf)
 				
-					RelationCoupler =  math.max(dorf_hxfig_id,reldorf) .. "-".. math.min(dorf_hxfig_id,reldorf)
-					
 					--- Define starting node
 					RelationStart = math.max(dorf_hxfig_id,reldorf) 
 					if RelationStart == dorf_hxfig_id then
 						RelationStartName = dorf_name
 						---start is main fort dorf
-				--		print("\""..dorf_name.."\"", " [label= \""..dorf_name.. "\\n" ..caste .. "\"".. "style=filled color=", dorf_gendercolor, " shape=Mrecord]") 
 					else 
-					--start is related dorf
-						RelationStartName = reldorfname
-				--		print("\""..reldorfname.."\"", " [label= \""..reldorfname.. "\\n" ..'' .. "\"".. "style=filled color=", relgendercolor, " shape=Mrecord]") 					
+						--start is related dorf
+						RelationStartName = reldorfname				
 					end
 					
 					--- Define ending node
@@ -318,48 +301,29 @@ local function relations()
 					if RelationEnd == dorf_hxfig_id then
 						---end is main fort dorf
 						RelationEndName = dorf_name
-					--	print("\""..dorf_name.."\"", " [label= \""..dorf_name.. "\\n" ..caste .. "\"".. "style=filled color=", dorf_gendercolor, " shape=Mrecord]") 
 					else 
-					--end is related dorf
-						RelationEndName = reldorfname
-				--		print("\""..reldorfname.."\"", " [label= \""..reldorfname.. "\\n" ..'' .. "\"".. "style=filled color=", relgendercolor, " shape=Mrecord]") 					
+						--end is related dorf
+						RelationEndName = reldorfname			
 					end			
 					
 					if reltype == 'Mother' then 
-						--NodeCoupler =  math.max(dorf_hxfig_id,reldorf) .. "-".. math.min(dorf_hxfig_id,reldorf)
-						--print("\""..NodeCoupler.."\"", " [shape=point color=plum3 ]") 
-						--print("\""..dorf_name.."\"->\""..NodeCoupler.."\"->\"".. reldorfname .."\"[style=dashed dir=both color=plum3  arrowhead=none arrowtail=normal]")
 						generategraphnode_hfig(dorf_hxfig_id)
 						generategraphnode_hfig(reldorf)
 						print("\""..RelationStart.."\"->\"".. RelationEnd .."\"[style=dashed dir=both color=plum3  arrowhead=none arrowtail=normal]")
 					elseif reltype == 'Father' then 
-						--NodeCoupler = math.max(dorf_hxfig_id,reldorf) .. "-".. math.min(dorf_hxfig_id,reldorf)
-						--print("\""..NodeCoupler.."\"", " [shape=point color=cornflowerblue]") 
-						--print("\""..dorf_name.."\"->\""..NodeCoupler.."\"->\"".. reldorfname .."\"[style=dashed dir=both color=cornflowerblue arrowhead=none arrowtail=normal]")
 						generategraphnode_hfig(dorf_hxfig_id)
 						generategraphnode_hfig(reldorf)
 						print("\""..RelationStart.."\"->\"".. RelationEnd .."\"[style=dashed dir=both color=cornflowerblue arrowhead=none arrowtail=normal]")
 					elseif reltype == 'Spouse' then 
-						--NodeCoupler = math.max(dorf_hxfig_id,reldorf) .. "-".. math.min(dorf_hxfig_id,reldorf)
-						--print("\""..NodeCoupler.."\"", " [shape=point color=darkslategray4 ]") 
-						--print("\""..dorf_name.."\"->\""..NodeCoupler.."\"->\"".. reldorfname .."\" [style=solid color=darkslategray4  arrowhead=inv ]")
 						generategraphnode_hfig(dorf_hxfig_id)
 						generategraphnode_hfig(reldorf)
 						print("\""..RelationStart.."\"->\"".. RelationEnd .."\" [style=solid color=darkslategray4  dir=both penwidth = 2 arrowhead=inv arrowtail=inv]")
 					elseif reltype == 'Child' then 
-						--NodeCoupler = math.max(dorf_hxfig_id,reldorf) .. "-".. math.min(dorf_hxfig_id,reldorf)
-						--print('"', dorf_name, '"',"->",'"', reldorfname, '"', " [style=dashed dir=both color=grey arrowhead=none arrowtail=normal]")
-						-- omitting child links as they are duplicative of parent links.
-						-- NOTE THIS MAY NEED TO BE ADDED SO WE CAN SEE IF CHILDREN HAVE DIDED. 
-						--if relstatus ~= 'Alive' then 
 						generategraphnode_hfig(dorf_hxfig_id)
 						generategraphnode_hfig(reldorf)
 						print("\""..RelationStart.."\"->\"".. RelationEnd .."\"[style=dashed color=" .. relgendercolor.. "  dir=both arrowhead=none arrowtail=normal]")
 						--end
 					elseif reltype == 'Lover' then 
-						--NodeCoupler = math.max(dorf_hxfig_id,reldorf) .. "-".. math.min(dorf_hxfig_id,reldorf)
-						--print("\""..NodeCoupler.."\"", " [shape=point color=magenta ]") 
-						--print("\""..dorf_name.."\"->\""..NodeCoupler.."\"->\"".. reldorfname .."\"[style=solid color=magenta penwidth = 2 arrowType=inv]")
 						generategraphnode_hfig(dorf_hxfig_id)
 						generategraphnode_hfig(reldorf)
 						print("\""..RelationStart.."\"->\"".. RelationEnd .."\"[style=solid color=magenta dir=both penwidth = 2 arrowhead=inv arrowtail=inv]")
@@ -399,40 +363,4 @@ local function relations()
 	
 end
 
-local function printcitizen_csv()
-
-	local FortSite = dfhack.world.getCurrentSite()
-	local FortName = dfhack.translation.translateName(FortSite.name)
-    local CitizenTable = {}
-    local CitizenTable_header = "Unit_id,HxId,Name,Caste,Race,Gender,Born,Died,Age,Goal \n"
-	
-    for _, citizen in ipairs(dfhack.units.getCitizens(true, true)) do
-		
-		local cit_hxfig_hex = get_hfighex(citizen.id)
-		local cit_hxfig_id = citizen.hist_figure_id
-		local cit_hex = citizen
-		local cit_id = citizen.id
-		
-		local cit_name = dfhack.translation.translateName(cit_hex.name)		
-		local caste = get_caste_name(citizen.race, citizen.caste, citizen.profession)
-		
-        CitizenTable[cit_hex] = string.format('%s,%s,%s,%s,%s,%s,%s,%s,%s \n', cit_id,cit_hxfig_id,cit_name,caste,dfhack.units.getRaceName(cit_hex),gender_read(cit_hxfig_hex.sex),get_birthyear(cit_hxfig_id),get_deathyear(cit_hxfig_id),math.floor(dfhack.units.getAge(cit_hex, true)),dfhack.units.getGoalName(cit_hex,0))
-		
-		print(string.format('%s,%s,%s,%s,%s,%s,%s,%s,"%s" \n', cit_id,cit_hxfig_id,cit_name,caste,dfhack.units.getRaceName(cit_hex),gender_read(cit_hxfig_hex.sex),get_birthyear(cit_hxfig_id),get_deathyear(cit_hxfig_id),math.floor(dfhack.units.getAge(cit_hex, true)),dfhack.units.getGoalName(cit_hex,0)))
-		
-    end
-	
-	local f = io.open(FortName .. "_CitizenTable_" .. os.date("%Y".. "_" .. "%m".."_".. "%d") .. ".csv", "w")
-
-    f:write(CitizenTable_header)
-    for _,p in pairs(CitizenTable) do
-        f:write(p)
-    end
-
-    f:close()
-    print("Exported: " .. FortName .. "_CitizenTable_" .. os.date("%Y".. "_" .. "%m".."_".. "%d") .. ".csv")
-	
-end
-
 relations()
---printcitizen_csv()
