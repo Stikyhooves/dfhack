@@ -22,7 +22,7 @@ If a unit is not present in your fortress (either dead or elsewhere) theier info
 
 To use this code output:    
   1. Clear the dfhack output window.     
-  2. Run the script.   
+  2. Run the script (relationsexporter).   
   3. Copy the code from the output window using the dfhack 'copy output to clipboard function'.   
   4. Paste that code into the graphviz digraph generator of your choice. (i.e. https://dreampuf.github.io/GraphvizOnline/   )
   5. Behold the relations.   
