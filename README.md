@@ -6,7 +6,7 @@ The original script did single dwarf selection, exporting information for the se
 This script runs a loop through all active dwarves to get immediate relations that are defined as hfigs.   
 
 It generates three primary exports:  
- 		1: A csv of the your citizens and thier relationships. This includes spouse, father, mother, lover, child, diety, and deceased pet relations. The limitation to relationships is based on what relationships are stored in the histfig data. This may be why (in my observation) only deceased pets are listed. There is also an indication of if the related entity is living or dead.
+ 		1: A csv of the your citizens and thier relationships. This includes spouse, father, mother, lover, child, diety, and deceased pet relations. The limitation to relationships is based on what relationships are stored in the histfig data. This may be why (in my observation) only deceased pets are listed. There is also an indication of if the related entity is living or dead.   
    The data is presented as:  
          **Fields Related to the main unit:** Dorf_uid,Dorf_hfid,Dorf_Race, Dorf_Name, Dorf_Gender, Dorf_BirthYear, Dorf_DeathYear, Dorf_Age, Dorf_Goal 
          **Fields Related to the related unit:** Relation_Code, Relation_Type, Relation_hfid, Relation_Name, Relation_Gender, Relation_Living
