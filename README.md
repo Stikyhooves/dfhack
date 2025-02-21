@@ -17,7 +17,7 @@ The data is presented as:
 - **Fields:** Unit_id,HxId,Name,Caste,Race,Gender,Born,Died,Age,Goal
          
 3: The relationships for lovers, spouses, and children as a graphviz digraph code. This outputs directly to the dfhack output window so that it can be copy/pasted directly  into a visualizer. This can be used with any graphviz generator such as https://dreampuf.github.io/GraphvizOnline/   
-This visualization is limited to lovers (indicated by think magenta lines), spouses (indicated by thick teal lines), and parents/children (indicated by dashed lines).   
+This visualization is limited to lovers (indicated by think magenta lines), spouses (indicated by thick teal lines), and parents/children (indicated by dashed lines). I think it may inadventently omit deceased children at this time, but I know how this can be fixed, so I may update that soon.       
 If a unit is not present in your fortress (either dead or elsewhere) their information will show in a simple circle rather than a gender colored box. 
 
 To use this code output:    
