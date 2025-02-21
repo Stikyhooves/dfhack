@@ -31,9 +31,10 @@ To use this code output:
 
 ### Plans:   
 Goals for the next week or so:   
-- I need to account for dead children. They are not currently listed in the graphviz.
-- I need to differentiate between dead and 'off site' dwarves in the graphviz. Currently I account for child/parent relations based on living/present children. This was done to prevent duplcication of edges, but I know more now and can account for the differences.
+- I need to account for dead children. They are not currently listed in the graphviz. (done but code is still messy)
+- I need to differentiate between dead and 'off site' dwarves in the graphviz. Currently I account for child/parent relations based on living/present children. This was done to prevent duplcication of edges, but I know more now and can account for the differences. (done but code is still messy)
 
 #### Updates:   
-- 2/21/25 - Added counts of any living relatives, spouses, lovers, and children to the citizen table expport. 
+- 2/21/25 - Added counts of any living relatives, spouses, lovers, and children to the citizen table expport.
+- 2/21/25 round 2 - Added deceased and off site color indicators for graphviz. Cleanup of code and child edges still needed. Child edges are grey and need to match father/mother edges for clarity. 
   
