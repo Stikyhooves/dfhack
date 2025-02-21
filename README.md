@@ -1,5 +1,8 @@
 # Dfhack scripts:
 ## Script: relationsexporter.lua
+This script exports dwarf fortress 1st degree relationships as csv's and as a graphviz digraph code.   
+
+### Background on the script. 
 The code in this script was heavily borrowed from Ramblur's now defunct family.lua script.  
 (https://github.com/Ramblurr/dfhack/blob/f585ecf4831fc19badc97b37e27cd4ccc7874c44/scripts/family.lua (2/18/2025))  
 The original script did single dwarf selection, exporting information for the selected dwarf's family only. It had the ability to pull distant relations such as grandparents for a single entity. I have updated his script to make it operational and you may see it posted here. 
