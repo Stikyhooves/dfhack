@@ -29,3 +29,8 @@ To use this code output:
   6. ***Behold the relations.*** I designed this to work with dot and neato arrangements. I like both for different reasons. 
 
 
+### Plans:   
+Goals for the next week or so:   
+- I need to account for dead children (who do are not currently listed in the graphviz.
+- I need to differentiate between dead and 'off site' dwarves in the graphviz.   
+  
