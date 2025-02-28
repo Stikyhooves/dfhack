@@ -25,10 +25,10 @@ function VistorsWindow:init()
            -- on_double_click=self:callback('onIgnore'),
            -- on_double_click2=self:callback('onToggleGroup'),
         },
-        --widgets.WrappedLabel{  -- Holding this space in case 
-        --    frame={b=3, l=0}, 
-         --   text_to_wrap='Select to zoom to unit. Double click to toggle unit ignore. Shift double click to toggle a group.', 
-     --   },
+       widgets.WrappedLabel{  -- Holding this space in case 
+          frame={b=3, l=0}, 
+            text_to_wrap='Click on a petitioner to center on them for futher inspection.', 
+        },
     }
     self:initListChoices()
 end
