@@ -18,16 +18,16 @@ VistorsWindow.ATTRS {
 
 function VistorsWindow:init()
     self:addviews{
+	    widgets.WrappedLabel{  -- Holding this space in case 
+            frame={l=0, r=0, t=0},
+            text_to_wrap='Click on a petitioner to center on them for futher inspection.', 
+        },
         widgets.List{
-            frame={l=0, r=0, t=0, b=6},
+            frame={l=0, r=0, t=3, b=6},
             view_id = 'list',
             on_select=self:callback('onZoom'),
            -- on_double_click=self:callback('onIgnore'),
            -- on_double_click2=self:callback('onToggleGroup'),
-        },
-       widgets.WrappedLabel{  -- Holding this space in case 
-          frame={b=3, l=0}, 
-            text_to_wrap='Click on a petitioner to center on them for futher inspection.', 
         },
     }
     self:initListChoices()
