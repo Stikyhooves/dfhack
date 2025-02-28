@@ -7,7 +7,6 @@ function get_caste_name(race, caste, profession)
     return dfhack.units.getCasteProfessionName(race, caste, profession)
 end
 
-
 VistorsWindow = defclass(VistorsWindow, widgets.Window)
 VistorsWindow.ATTRS {
     frame_title='Current Petitioners',
@@ -39,7 +38,6 @@ function VistorsWindow:initListChoices()
 -- Not tested for troupes
 
         local choices = {}
-        
         for _,p in pairs (df.global.plotinfo.petitions) do  -- for each petition on screen
         local petition_id = p
             for _,agmt in pairs(df.global.world.agreements.all) do --- Get agreement full list
@@ -47,36 +45,32 @@ function VistorsWindow:initListChoices()
                 if agreement_id == petition_id then                     
                     party0_unit = df.global.world.agreements.all[agreement_id].parties[0].histfig_ids[0]
                 
-                    for _,u in pairs(df.global.world.units.active) do -- now check those hfigs against historical data to get info on them
-                        if  dfhack.units.isActive (u) then  -- confirm they are active. (probably not nessecary)
-                            local unit_hxfig_id = u.hist_figure_id
-                            if unit_hxfig_id == party0_unit then 
-                            
-                                local u_name = dfhack.translation.translateName(u.name)
-                                local trans_name = dfhack.translation.translateName(u.name, true, true)
-                                local u_caste = get_caste_name(u.race, u.caste, u.profession)
-                                local u_race = dfhack.units.getRaceName(u)
-                                --print(u_race)
-                                if df.global.world.agreements.all[agmt.id].details[0].type == 2 then 
-                                    text = "Residency: "..u_name .. " (" .. trans_name.. ") - " .. u_caste .. " (" .. u_race .. ")"
-                                    --table.insert(choices, {text=text, data={unit=u, group=groupIndex}})
-                                    table.insert(choices, {text=text, data={unit=u, group=0}})
-                                
-                                elseif df.global.world.agreements.all[i.id].details[0].type == 3 then     
-                                    text = "Citizenship: ".. u_name .. " (" .. trans_name.. ") - " .. u_caste        
-                                    --table.insert(choices, {text=text, data={unit=u, group=groupIndex}})
-                                    table.insert(choices, {text=text, data={unit=u, group=0}})
-                                    
-                                end
-                            end
-                        end
+                    for _,u in pairs(df.global.world.units.active) do -- now check those hfigs against unit ids to get info on them (may be improved)
+			local unit_hxfig_id = u.hist_figure_id
+			if unit_hxfig_id == party0_unit then 
+				--print(unit_hxfig_id, " - " , party0_unit)
+				local u_name = dfhack.translation.translateName(u.name)
+				local trans_name = dfhack.translation.translateName(u.name, true, true)
+				local u_caste = get_caste_name(u.race, u.caste, u.profession)
+				local u_race = dfhack.units.getRaceName(u)
+				--print(u_race)
+				if df.global.world.agreements.all[agmt.id].details[0].type == 2 then 
+					text = "Residency: "..u_name .. " (" .. trans_name.. ") - " .. u_caste .. " (" .. u_race .. ")"
+					--table.insert(choices, {text=text, data={unit=u, group=groupIndex}})
+					table.insert(choices, {text=text, data={unit=u, group=0}})
+				
+				elseif df.global.world.agreements.all[i.id].details[0].type == 3 then     
+					text = "Citizenship: ".. u_name .. " (" .. trans_name.. ") - " .. u_caste        
+					--table.insert(choices, {text=text, data={unit=u, group=groupIndex}})
+					table.insert(choices, {text=text, data={unit=u, group=0}})
+					
+				end
+			end
                     end
                 end
             end
         end
-        
-        self.subviews.list:setChoices(choices)
-        
+        self.subviews.list:setChoices(choices)     
 end
 
 function VistorsWindow:onZoom()
@@ -86,7 +80,6 @@ function VistorsWindow:onZoom()
     local target = xyz2pos(dfhack.units.getPosition(unit))
     dfhack.gui.revealInDwarfmodeMap(target, true, true)
 end
-
 
 VistorsScreen = defclass(VistorsScreen, gui.ZScreen)
 VistorsScreen.ATTRS {
