@@ -2,6 +2,14 @@ local utils = require 'utils'
 local gui = require('gui')
 local widgets = require('gui.widgets')
 
+VistorsWindow = defclass(VistorsWindow, widgets.Window)
+VistorsWindow.ATTRS {
+    frame_title='Current Petitioners',
+    frame={w=80, h=28, r=3, b=5},
+    resizable=true,
+    resize_min={w=50, h=20},
+}
+
 function get_caste_name(race, caste, profession)
     return dfhack.units.getCasteProfessionName(race, caste, profession)
 end
@@ -209,15 +217,6 @@ function VistorsWindow:onZoom()
     if desc.frame_body then desc:updateLayout() end --- update view with new focus text
    
 end
-
-
-VistorsWindow = defclass(VistorsWindow, widgets.Window)
-VistorsWindow.ATTRS {
-    frame_title='Current Petitioners',
-    frame={w=80, h=28, r=3, b=5},
-    resizable=true,
-    resize_min={w=50, h=20},
-}
 
 VistorsScreen = defclass(VistorsScreen, gui.ZScreen)
 VistorsScreen.ATTRS {
