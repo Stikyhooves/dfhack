@@ -1,14 +1,14 @@
-local utils = require 'utils'
+--@ module = true
+
+local dialogs = require('gui.dialogs')
 local gui = require('gui')
+local overlay = require('plugins.overlay')
+local utils = require('utils')
 local widgets = require('gui.widgets')
 
-VistorsWindow = defclass(VistorsWindow, widgets.Window)
-VistorsWindow.ATTRS {
-    frame_title='Current Petitioners',
-    frame={w=80, h=28, r=3, b=5},
-    resizable=true,
-    resize_min={w=50, h=20},
-}
+--
+-- Other called functions
+--
 
 function get_caste_name(race, caste, profession)
     return dfhack.units.getCasteProfessionName(race, caste, profession)
@@ -96,7 +96,66 @@ function personalityissues(u)
            
 end
 
-function VistorsWindow:init()
+-- -------------------
+-- PetitionerOverlay
+--
+
+PetitionerOverlay = defclass(PetitionerOverlay, overlay.OverlayWidget)
+PetitionerOverlay.ATTRS{
+    desc='Adds a button to launch the petitioner gui.',
+    --default_pos={x=58,y=28},-- position just under Approve Deny buttons
+    default_pos={x=85,y=22},-- position to the right of the Approve Deny buttons
+    version=2,
+    default_enabled=true,
+    viewscreens={'dwarfmode/Petitions'},
+    frame={w=20, h=5},
+    frame_background=gui.CLEAR_PEN,
+}
+
+
+local function show_petioner_screen()
+    return PetitionerScreen{
+        dfhack.run_script('Petitioners'),
+    }:show()
+end
+
+function PetitionerOverlay:init()
+    self:addviews{
+        widgets.Panel{
+        frame={b=0, r=0, w=20, h=4},
+        frame_style=gui.MEDIUM_FRAME,
+        frame_background=gui.CLEAR_PEN,
+        visible=true,
+        subviews={
+            widgets.Label{
+                text={
+                    '  Click to open', NEWLINE,
+                    'petitioner screen  ',
+                    },
+                on_click= show_petioner_screen,
+                --on_click=function()view = view and view:raise() or PetitionerScreen{}:show() end,
+                },
+            },
+        },
+    }
+end
+
+OVERLAY_WIDGETS = {PetitionerButton=PetitionerOverlay}
+
+--
+-- PetitionersWindow
+--
+
+PetitionersWindow = defclass(PetitionersWindow, widgets.Window)
+PetitionersWindow.ATTRS {
+    frame_title='Current Petitioners',
+    frame={w=80, h=28, l=6, b=4},
+    resizable=true,
+    resize_min={w=50, h=20},
+}
+
+
+function PetitionersWindow:init()
     self:addviews{
         widgets.WrappedLabel{
             frame={l=0, r=0, t=0},
@@ -106,6 +165,7 @@ function VistorsWindow:init()
             frame={l=0, r=0, t=3, b=6},
             view_id = 'list',
             on_select=self:callback('onZoom'),
+            -- consider if this should just open the unit menus
         },
         widgets.Panel{
             view_id='footer',
@@ -128,7 +188,7 @@ function VistorsWindow:init()
     self:initListChoices()
 end
 
-function VistorsWindow:initListChoices()
+function PetitionersWindow:initListChoices()
     local choices = {}
     for _,p in pairs (df.global.plotinfo.petitions) do  -- for each petition on screen
     local petition_id = p
@@ -207,7 +267,7 @@ function VistorsWindow:initListChoices()
     self.subviews.list:setChoices(choices)    
 end
 
-function VistorsWindow:onZoom()
+function PetitionersWindow:onZoom()
     local _, choice = self.subviews.list:getSelected()
     local unit = choice.data.unit
     local target = xyz2pos(dfhack.units.getPosition(unit))
@@ -218,17 +278,25 @@ function VistorsWindow:onZoom()
    
 end
 
-VistorsScreen = defclass(VistorsScreen, gui.ZScreen)
-VistorsScreen.ATTRS {
-    focus_path='VistorsScreen',
+-- -------------------
+-- PetitionerScreen
+--
+
+PetitionerScreen = defclass(PetitionerScreen, gui.ZScreen)
+PetitionerScreen.ATTRS {
+    focus_path='PetitionerScreen',
 }
 
-function VistorsScreen:init()
-    self:addviews{VistorsWindow{}}
+function PetitionerScreen:init()
+    self:addviews{PetitionersWindow{}}
 end
 
-function VistorsScreen:onDismiss()
+function PetitionerScreen:onRenderFrame()
+    if view and not self.is_valid_ui_state() then
+        view:dismiss()
+    end
+end
+
+function PetitionerScreen:onDismiss()
     view = nil
 end
-
-view = view and view:raise() or VistorsScreen{}:show()
